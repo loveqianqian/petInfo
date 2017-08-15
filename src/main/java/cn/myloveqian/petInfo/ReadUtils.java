@@ -47,18 +47,19 @@ public class ReadUtils {
             Map<String, String> map = new HashMap<>();
             String href = totEle.attr("href");
             String typeName = totEle.select("li").text();
-
-            Connection c = Jsoup.connect(url + href);
-            Connection.Response e = null;
+            Connection connect = Jsoup.connect(url + href);
+            Connection.Response execute = null;
             try {
-                e = c.execute();
-            } catch (IOException e1) {
-                e1.printStackTrace();
+                execute = connect.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            String b = e.body();
-            Document d = Jsoup.parseBodyFragment(b);
-            Elements ss = d.select("div.list_page").select("div.f_p_r").select("li > a");
-            for (int i = 0; i < ss.size()-1; i++) {
+            String body = execute.body();
+            Document document = Jsoup.parse(body);
+            Elements ss = document
+                    .select("div.f_p_r")
+                    .select("li > a");
+            for (int i = 0; i < ss.size() - 1; i++) {
                 Element el = ss.get(i);
                 String h = el.attr("href");
                 map.put("href", url + h);
@@ -77,7 +78,7 @@ public class ReadUtils {
     }
 
     private static void getContent(PreparedStatement statement, String href, String typeName) throws SQLException {
-        Connection connect = Jsoup.connect(url + href);
+        Connection connect = Jsoup.connect(href);
         Connection.Response execute = null;
         try {
             execute = connect.execute();
