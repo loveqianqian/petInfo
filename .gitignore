@@ -9,3 +9,6 @@
 .idea/workspace.xml
 src/main/resources/
 target/
+将删除 .idea/dataSources.local.xml
+将删除 .idea/petInfo.iml
+将删除 .idea/dataSources/

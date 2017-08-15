@@ -56,13 +56,19 @@ public class ReadUtils {
             }
             String body = execute.body();
             Document document = Jsoup.parse(body);
-            Elements ss = document
+            String total = document
                     .select("div.f_p_r")
-                    .select("li > a");
-            for (int i = 0; i < ss.size() - 1; i++) {
-                Element el = ss.get(i);
-                String h = el.attr("href");
-                map.put("href", url + h);
+                    .select("li")
+                    .select("span")
+                    .select("font")
+                    .select("b").text();
+            int totalInt = Integer.parseInt(total);
+            int num = totalInt / 6 + 1;
+            Element element = document.select("div.f_p_r").select("li>a").get(0);
+            String h = url + element.attr("href");
+            String real = h.substring(0, h.length() - 1);
+            for (int i = 0; i <= num; i++) {
+                map.put("href", real + (i + 1));
                 map.put("typeName", typeName);
                 list.add(map);
             }

@@ -70,7 +70,7 @@ public class ReadSampleUtils {
                     StringBuilder sb = new StringBuilder();
                     for (Element img : imgs) {
                         String src = img.attr("src");
-                        sb.append(url).append(src).append(",");
+                        sb.append(url).append("/").append(src).append(",");
                     }
                     diseasePhoto = sb.toString();
                 } else if (text.equals("症状")) {
@@ -91,7 +91,7 @@ public class ReadSampleUtils {
                 }
             }
             resultMap.put("zhengzhuang", zhengzhuang);
-            resultMap.put("diseasePhoto", diseasePhoto);
+            resultMap.put("diseasePhoto", diseasePhoto.length() > 0 ? diseasePhoto.substring(0, diseasePhoto.length() - 1) : "");
             resultMap.put("diseaseDescribe", diseaseDescribe);
             resultMap.put("causes", causes);
             resultMap.put("plan", plan);
