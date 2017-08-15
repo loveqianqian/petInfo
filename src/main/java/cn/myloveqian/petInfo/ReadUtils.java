@@ -30,6 +30,8 @@ public class ReadUtils {
 
     private static String insertSql = "INSERT INTO td_disease (photo,type,rediectUrl,disease_desc,disease_type) VALUES (?,?,?,?,?)";
 
+    private static int totalNum = 0;
+
     public static void main(String[] args) throws SQLException {
         MysqlUtils utils = new MysqlUtils();
         java.sql.Connection jdbcConnection = utils.getMysql();
@@ -44,7 +46,6 @@ public class ReadUtils {
         }
         Elements totEles = Jsoup.parseBodyFragment(totExecute.body()).select("div.list_ks").select("ul").select("a");
         for (Element totEle : totEles) {
-            Map<String, String> map = new HashMap<>();
             String href = totEle.attr("href");
             String typeName = totEle.select("li").text();
             Connection connect = Jsoup.connect(url + href);
@@ -68,6 +69,8 @@ public class ReadUtils {
             String h = url + element.attr("href");
             String real = h.substring(0, h.length() - 1);
             for (int i = 0; i <= num; i++) {
+                Map<String, String> map = new HashMap<>();
+                map.put("id", i + "");
                 map.put("href", real + (i + 1));
                 map.put("typeName", typeName);
                 list.add(map);
@@ -80,10 +83,11 @@ public class ReadUtils {
 
         statement.executeBatch();
         utils.closeConn();
-
+        System.out.println(totalNum);
     }
 
     private static void getContent(PreparedStatement statement, String href, String typeName) throws SQLException {
+        System.out.println(href);
         Connection connect = Jsoup.connect(href);
         Connection.Response execute = null;
         try {
@@ -95,6 +99,7 @@ public class ReadUtils {
         Document document = Jsoup.parseBodyFragment(body);
         Elements eles = document.select("div.a_art");
         for (Element ele : eles) {
+            totalNum++;
             String src = ele.select("div.a_con_l").select("img").attr("src");
             statement.setString(1, url + src);
             Elements aEle = ele.select("div.a_con_r").select("div.a_c_top").select("a");
