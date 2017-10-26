@@ -26,7 +26,7 @@ public class MysqlUtils {
     public Connection getMysql() {
         if (connection == null) {
             try {
-                connection = DriverManager.getConnection("jdbc:mysql://123.57.172.22:3306/pet?characterEncoding=utf8", "root", "apolloserver");
+                connection = DriverManager.getConnection("jdbc:mysql://bj-cdb-65ds0oeb.sql.tencentcdb.com:63945/pet?characterEncoding=utf8", "root", "csdiao210");
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -53,51 +53,55 @@ public class ReadSampleUtils {
             String type = resultSet.getString(2);
             resultMap.put("type", type);
             String rediectUrl = resultSet.getString(3);
-            Connection totConn = Jsoup.connect(rediectUrl);
-            Connection.Response execute = totConn.execute();
-            String body = execute.body();
-            Document document = Jsoup.parseBodyFragment(body);
-            title = document.select("p.a_tit").text();
-            resultMap.put("title", title);
-            Elements ss = document.select("div.txt_con");
-            for (Element s : ss) {
-                String text = s.select("div.d_tit").text();
-                String content = s.select("div.d_con").text();
-                if (text.equals("疾病描述")) {
-                    diseaseDescribe = content;
-                } else if (text.equals("疾病图片")) {
-                    Elements imgs = s.select("li").select("img");
-                    StringBuilder sb = new StringBuilder();
-                    for (Element img : imgs) {
-                        String src = img.attr("src");
-                        sb.append(url).append("/").append(src).append(",");
+            try {
+                Connection totConn = Jsoup.connect(rediectUrl);
+                Connection.Response execute = totConn.execute();
+                String body = execute.body();
+                Document document = Jsoup.parseBodyFragment(body);
+                title = document.select("p.a_tit").text();
+                resultMap.put("title", title);
+                Elements ss = document.select("div.txt_con");
+                for (Element s : ss) {
+                    String text = s.select("div.d_tit").text();
+                    String content = s.select("div.d_con").text();
+                    if (text.equals("疾病描述")) {
+                        diseaseDescribe = content;
+                    } else if (text.equals("疾病图片")) {
+                        Elements imgs = s.select("li").select("img");
+                        StringBuilder sb = new StringBuilder();
+                        for (Element img : imgs) {
+                            String src = img.attr("src");
+                            sb.append(url).append("/").append(src).append(",");
+                        }
+                        diseasePhoto = sb.toString();
+                    } else if (text.equals("症状")) {
+                        zhengzhuang = content;
+                    } else if (text.equals("病因")) {
+                        causes = content;
+                    } else if (text.equals("治疗方案")) {
+                        plan = content;
                     }
-                    diseasePhoto = sb.toString();
-                } else if (text.equals("症状")) {
-                    zhengzhuang = content;
-                } else if (text.equals("病因")) {
-                    causes = content;
-                } else if (text.equals("治疗方案")) {
-                    plan = content;
                 }
-            }
-            Elements ps = document.select("blockquote.wxqq-bg").select("p");
-            for (Element p : ps) {
-                String pText = p.text();
-                if (pText.contains("推荐检查")) {
-                    recommend = pText.replace("推荐检查:", "");
-                } else if (pText.contains("导医提示")) {
-                    tip = pText.replace("导医提示:", "");
+                Elements ps = document.select("blockquote.wxqq-bg").select("p");
+                for (Element p : ps) {
+                    String pText = p.text();
+                    if (pText.contains("推荐检查")) {
+                        recommend = pText.replace("推荐检查:", "");
+                    } else if (pText.contains("导医提示")) {
+                        tip = pText.replace("导医提示:", "");
+                    }
                 }
+                resultMap.put("zhengzhuang", zhengzhuang);
+                resultMap.put("diseasePhoto", diseasePhoto.length() > 0 ? diseasePhoto.substring(0, diseasePhoto.length() - 1) : "");
+                resultMap.put("diseaseDescribe", diseaseDescribe);
+                resultMap.put("causes", causes);
+                resultMap.put("plan", plan);
+                resultMap.put("tip", tip);
+                resultMap.put("recommend", recommend);
+                resultList.add(resultMap);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            resultMap.put("zhengzhuang", zhengzhuang);
-            resultMap.put("diseasePhoto", diseasePhoto.length() > 0 ? diseasePhoto.substring(0, diseasePhoto.length() - 1) : "");
-            resultMap.put("diseaseDescribe", diseaseDescribe);
-            resultMap.put("causes", causes);
-            resultMap.put("plan", plan);
-            resultMap.put("tip", tip);
-            resultMap.put("recommend", recommend);
-            resultList.add(resultMap);
         }
         PreparedStatement preparedStatement = mysql.prepareStatement(insertSql);
         for (Map<String, String> temp : resultList) {

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="pet@123.57.172.22" uuid="c6469e8f-c8cb-46b1-ad2e-da6063e19723">
+    <data-source source="LOCAL" name="pet@bj-cdb-65ds0oeb.sql.tencentcdb.com" uuid="c6469e8f-c8cb-46b1-ad2e-da6063e19723">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://123.57.172.22:3306/pet</jdbc-url>
+      <jdbc-url>jdbc:mysql://bj-cdb-65ds0oeb.sql.tencentcdb.com:63945/pet</jdbc-url>
       <driver-properties>
         <property name="autoReconnect" value="true" />
         <property name="zeroDateTimeBehavior" value="convertToNull" />
